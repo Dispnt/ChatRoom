@@ -1,0 +1,10 @@
+CREATE DATABASE chatroom;
+use chatroom
+CREATE TABLE `user` (
+  `user_id` int(8) NOT NULL AUTO_INCREMENT,
+  `user_mail` varchar(45) NOT NULL unique,
+  `user_pwd` varchar(45) NOT NULL,
+  `user_nickname` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+);
+INSERT INTO `user`(`user_id` ,`user_mail`,`user_pwd`, `user_nickname`) VALUES (1, 'dispnt@dispnt.com', 'f18011433','Yu');
