@@ -3,14 +3,17 @@
     <blog-header></blog-header>
     <hr/>
     <div>
-      用户名:<input type="text" v-model="loginInfoVo.username" placeholder="请输入用户名" />
+      邮箱：<input type="text" v-model="loginInfoVo.mail" placeholder="请输入邮箱" />
       <br/>
-      密码：<input type="password" v-model="loginInfoVo.password" placeholder="请输入密码" />
+      密码：<input type="password" v-model="loginInfoVo.pwd" placeholder="请输入密码" />
       <br/>
-      <button v-on:click="login">登录</button>
+	  昵称：<input type="text" v-model="loginInfoVo.nickname" placeholder="请输入昵称" />
+	  <br/>
+      <button v-on:click="login">录入</button>
       <br/>
       <button v-on:click="findAll">查找</button>
-      登录验证情况：<textarea cols="30" rows="10" v-model="responseResult"></textarea>
+	  <br/>
+      <textarea cols="30" rows="10" v-model="responseResult"></textarea>
     </div>
     <hr/>
     <blog-footer></blog-footer>
@@ -33,11 +36,12 @@ export default {
   },
   methods: {
     login () {
+		var param = new URLSearchParams();
+		param.append('mail',this.loginInfoVo.mail);
+		param.append('pwd',this.loginInfoVo.pwd);
+		param.append('nickname',this.loginInfoVo.nickname);
       this.$axios
-        .post('/login', {
-          username: this.loginInfoVo.username,
-          password: this.loginInfoVo.password
-        })
+        .post('/api/add', param)
         .then(successResponse => {
           this.responseResult = JSON.stringify(successResponse.data)
           if (successResponse.data.code === 200) {
@@ -45,10 +49,10 @@ export default {
           }
         })
         .catch(failResponse => {})
-    }
+    },
     findAll () {
           this.$axios
-            .get('/demo/all')
+            .get('/api/all')
             .then(successResponse => {
               this.responseResult = JSON.stringify(successResponse.data)
               if (successResponse.data.code === 200) {
