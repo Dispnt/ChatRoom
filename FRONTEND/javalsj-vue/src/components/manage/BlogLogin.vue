@@ -9,6 +9,7 @@
       <br/>
       <button v-on:click="login">登录</button>
       <br/>
+      <button v-on:click="findAll">查找</button>
       登录验证情况：<textarea cols="30" rows="10" v-model="responseResult"></textarea>
     </div>
     <hr/>
@@ -45,6 +46,17 @@ export default {
         })
         .catch(failResponse => {})
     }
+    findAll () {
+          this.$axios
+            .get('/demo/all')
+            .then(successResponse => {
+              this.responseResult = JSON.stringify(successResponse.data)
+              if (successResponse.data.code === 200) {
+                this.$router.replace({path: '/index'})
+              }
+            })
+            .catch(failResponse => {})
+        }
   }
 }
 </script>
