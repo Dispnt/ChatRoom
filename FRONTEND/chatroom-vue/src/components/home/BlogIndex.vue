@@ -3,13 +3,7 @@
     <blog-header></blog-header>
     <hr/>
 	
-		<!-- <el-aside width="200px">
-	      <el-table :data="tableData" style="width: 100%">
-	        <div>群成员</div>
-	        <el-table-column prop="user_id" width="60"> </el-table-column>
-	        <el-table-column prop="user_name" width="80"> </el-table-column>
-	      </el-table>
-	    </el-aside> -->
+		
     <div>
       这是首页
     </div>

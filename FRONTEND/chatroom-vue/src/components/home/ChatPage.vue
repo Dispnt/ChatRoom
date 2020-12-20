@@ -45,10 +45,10 @@
 				</el-footer>
 			</el-container>
 			<el-aside width="200px">
-			  <el-table :data="tableData" style="width: 100%">
-			    <div>群成员</div>
-			    <el-table-column prop="user_id" width="60"> </el-table-column>
-			    <el-table-column prop="user_name" width="80"> </el-table-column>
+				<button v-on:click="getAllUser">刷新</button>
+			  <el-table :data="allUserInfo">
+			    <el-table-column label="昵称" prop="nickname" width="60"> </el-table-column>
+			    <el-table-column label="邮箱" prop="mail" width="140"> </el-table-column>
 			  </el-table>
 			</el-aside>
 			</el-container>
@@ -68,6 +68,21 @@
 		components: {
 			chatHeader,
 			chatFooter
+		},
+		data() {
+			return {
+				// allUserInfo:null
+				allUserInfo: this.$axios.get('/api/all')
+								.then(response => (this.allUserInfo = response.data))
+			}
+		},
+		methods: {
+			getAllUser() {
+				this.$axios
+					.get('/api/all')
+					.then(response => (this.allUserInfo = response.data))
+					.catch(failResponse => {})
+			}
 		}
 	};
 </script>
