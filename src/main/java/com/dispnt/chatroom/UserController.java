@@ -5,11 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path="/api") // This means URL's start with /demo (after Application path)
-public class MainController {
-
+@RequestMapping(path="/api/user") // This means URL's start with /demo (after Application path)
+public class UserController {
     @Autowired
     private UserRepository userRepository;
+
     @CrossOrigin
     @PostMapping(path="/add")
     public @ResponseBody String addNewUser (@RequestParam String mail, @RequestParam String pwd
@@ -23,9 +23,11 @@ public class MainController {
         userRepository.save(u);
         return "Saved";
     }
+
     @CrossOrigin
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
 }
+
