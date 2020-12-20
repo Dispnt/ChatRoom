@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BlogIndex from '@/components/home/BlogIndex.vue'
-import BlogLogin from '@/components/manage/BlogLogin.vue'
-
+import UserRegister from '@/components/manage/UserRegister.vue'
+import ChatPage from '@/components/home/ChatPage.vue'
 
 Vue.use(Router)
 
@@ -10,7 +10,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/register'
     },
     {
       path: '/index',
@@ -22,9 +22,14 @@ export default new Router({
       redirect: '/login'
     },
     {
-      path: '/login',
-      name: 'BlogLogin',
-      component: BlogLogin
+      path: '/chitchat',
+      name: 'ChatPage',
+      component: ChatPage
+    },
+    {
+      path: '/register',
+      name: 'UserRegister',
+      component: UserRegister
     }
   ]
 })
