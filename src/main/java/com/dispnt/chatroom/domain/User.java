@@ -1,4 +1,4 @@
-package com.dispnt.chatroom;
+package com.dispnt.chatroom.domain;
 
 import javax.persistence.*;
 
