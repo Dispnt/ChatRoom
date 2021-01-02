@@ -4,9 +4,9 @@
 			<chatHeader />
 		</el-header>
 		<el-container>
-			
 			<el-container>
 				<el-main>
+					<div>当前群组{{messageInfo.group_id}}</div>
 					<div>
 						<div class="" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)">
 							<el-divider content-position="left">小江</el-divider>
@@ -30,13 +30,17 @@
 							<span>我要改餡法！</span>
 						</div>
 					</div>
+					<div>
+						<el-button type="success" icon="el-icon-check" v-on:click="queryMsg" circle></el-button>
+						<el-input type="textarea" v-model="getResult" placeholder=""></el-input>
+					</div>
 					<br /><br /><br />
 					<el-row :gutter="20">
 						<el-col :span="20">
-							<el-input type="textarea" placeholder="请输入内容" v-model="textarea1"></el-input>
+							<el-input type="textarea" v-model="messageInfo.msg_content" placeholder="请输入内容"></el-input>
 						</el-col>
 						<el-col :span="1">
-							<el-button type="success" icon="el-icon-check" circle></el-button>
+							<el-button type="success" icon="el-icon-check" v-on:click="sendMsg" circle></el-button>
 						</el-col>
 					</el-row>
 				</el-main>
@@ -45,7 +49,6 @@
 				</el-footer>
 			</el-container>
 			<el-aside width="200px">
-				<button v-on:click="getAllUser">刷新</button>
 			  <el-table :data="allUserInfo">
 			    <el-table-column label="昵称" prop="nickname" width="60"> </el-table-column>
 			    <el-table-column label="邮箱" prop="mail" width="140"> </el-table-column>
@@ -72,17 +75,40 @@
 		data() {
 			return {
 				// allUserInfo:null
-				allUserInfo: this.$axios.get('/api/all')
-								.then(response => (this.allUserInfo = response.data))
+				allUserInfo: this.$axios.get('/api/user/all')
+								.then(response => (this.allUserInfo = response.data)),
+				messageInfo: {
+					group_id: 1,
+					user_id: 1,
+					msg_content:''
+				},
+				getResult:[],
+				addResult:[]
 			}
 		},
 		methods: {
-			getAllUser() {
+			sendMsg() {
+				var param = new URLSearchParams();
+				param.append('group_id', this.messageInfo.group_id);
+				param.append('user_id', this.messageInfo.user_id);
+				param.append('msg_content', this.messageInfo.msg_content);
 				this.$axios
-					.get('/api/all')
-					.then(response => (this.allUserInfo = response.data))
-					.catch(failResponse => {})
-			}
-		}
+					.post('/api/chat/add', param)
+					.then(successResponse => {
+						this.addResult = JSON.stringify(successResponse.data)
+						this.messageInfo.msg_content=this.addResult;
+						
+					})
+			},
+			queryMsg(){
+				var param = new URLSearchParams();
+				param.append('group_id', this.messageInfo.group_id);
+				this.$axios
+					.post('/api/chat/get', param)
+					.then(successResponse => {
+						this.getResult = JSON.stringify(successResponse.data)
+						
+					})
+				}}
 	};
 </script>

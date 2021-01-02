@@ -9,7 +9,11 @@
 			<br />
 			昵称：<input type="text" v-model="loginInfoVo.nickname" placeholder="请输入昵称" />
 			<br />
-			<button v-on:click="login">录入</button>
+			<button v-on:click="register">录入</button>
+			<br />
+			<button v-on:click="del">删除</button>
+			<br />
+			<button v-on:click="findNickname">查找昵称</button>
 			<br />
 			<button v-on:click="findAll">查找</button>
 			<br />
@@ -47,13 +51,47 @@
 			}
 		},
 		methods: {
-			login() {
+			register() {
 				var param = new URLSearchParams();
 				param.append('mail', this.loginInfoVo.mail);
 				param.append('pwd', this.loginInfoVo.pwd);
 				param.append('nickname', this.loginInfoVo.nickname);
 				this.$axios
-					.post('/api/add', param)
+					.post('/api/user/register', param)
+					.then(successResponse => {
+						this.responseResult = JSON.stringify(successResponse.data)
+						if (successResponse.data.code === 200) {
+							this.$router.replace({
+								path: '/index'
+							})
+						}
+					})
+					.catch(failResponse => {})
+			},
+			del() {
+				var param = new URLSearchParams();
+				param.append('mail', this.loginInfoVo.mail);
+				param.append('pwd', this.loginInfoVo.pwd);
+				param.append('nickname', this.loginInfoVo.nickname);
+				this.$axios
+					.post('/api/user/delete', param)
+					.then(successResponse => {
+						this.responseResult = JSON.stringify(successResponse.data)
+						if (successResponse.data.code === 200) {
+							this.$router.replace({
+								path: '/index'
+							})
+						}
+					})
+					.catch(failResponse => {})
+			},
+			findNickname() {
+				var param = new URLSearchParams();
+				param.append('mail', this.loginInfoVo.mail);
+				param.append('pwd', this.loginInfoVo.pwd);
+				param.append('nickname', this.loginInfoVo.nickname);
+				this.$axios
+					.post('/api/user/findNickname', param)
 					.then(successResponse => {
 						this.responseResult = JSON.stringify(successResponse.data)
 						if (successResponse.data.code === 200) {
@@ -66,7 +104,7 @@
 			},
 			findAll() {
 				this.$axios
-					.get('/api/all')
+					.get('/api/user/all')
 					.then(response => (this.info = response.data))
 					.catch(failResponse => {})
 			}
