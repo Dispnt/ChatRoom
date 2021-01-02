@@ -1,113 +1,47 @@
 <template>
-	<div>
-		<blog-header></blog-header>
-		<hr />
-		<div>
-			邮箱：<input type="text" v-model="loginInfoVo.mail" placeholder="请输入邮箱" />
-			<br />
-			密码：<input type="password" v-model="loginInfoVo.pwd" placeholder="请输入密码" />
-			<br />
-			昵称：<input type="text" v-model="loginInfoVo.nickname" placeholder="请输入昵称" />
-			<br />
-			<button v-on:click="register">录入</button>
-			<br />
-			<button v-on:click="del">删除</button>
-			<br />
-			<button v-on:click="findNickname">查找昵称</button>
-			<br />
-			<button v-on:click="findAll">查找</button>
-			<br />
-			<ul>
-				<li v-for="item in info" :key="item.message">
-				    {{ item.mail }}
-				 </li>
-			</ul>
-			<br />
-			<textarea cols="30" rows="10" v-model="responseResult"></textarea>
-		</div>
-		<hr />
-		<blog-		></blog->
-	</div>
+	<el-row class="bg " type="flex" justify="center">
+		<el-col type="flex" align="middle">
+			<div class="grid-content" id="login">
+				<el-row>
+					<el-input class="inputField" v-model="input" placeholder="请输入内容"></el-input>
+					<el-input class="inputField" v-model="input" placeholder="请输入内容"></el-input>
+				</el-row>
+				<el-row style="padding-bottom: 3rem; margin-top: 5rem;">
+					<el-button type="primary">主要按钮</el-button>
+					<el-button>默认按钮</el-button>
+				</el-row>
+			</div>
+			
+			
+		</el-col>
+	</el-row>
+	
+	
+	
 </template>
 
 <script>
-	import chatHeader from '@/components/common/ChatHeader.vue'
-	import chatFooter from '@/components/common/ChatFooter.vue'
-
-	export default {
-		name: 'BlogLogin',
-				components: {
-			chatHeader,
-			chatFooter
-		},
-		data() {
-			return {
-				loginInfoVo: {
-					username: '',
-					password: ''
-				},
-				responseResult: [],
-				info: null
-			}
-		},
-		methods: {
-			register() {
-				var param = new URLSearchParams();
-				param.append('mail', this.loginInfoVo.mail);
-				param.append('pwd', this.loginInfoVo.pwd);
-				param.append('nickname', this.loginInfoVo.nickname);
-				this.$axios
-					.post('/api/user/register', param)
-					.then(successResponse => {
-						this.responseResult = JSON.stringify(successResponse.data)
-						if (successResponse.data.code === 200) {
-							this.$router.replace({
-								path: '/index'
-							})
-						}
-					})
-					.catch(failResponse => {})
-			},
-			del() {
-				var param = new URLSearchParams();
-				param.append('mail', this.loginInfoVo.mail);
-				param.append('pwd', this.loginInfoVo.pwd);
-				param.append('nickname', this.loginInfoVo.nickname);
-				this.$axios
-					.post('/api/user/delete', param)
-					.then(successResponse => {
-						this.responseResult = JSON.stringify(successResponse.data)
-						if (successResponse.data.code === 200) {
-							this.$router.replace({
-								path: '/index'
-							})
-						}
-					})
-					.catch(failResponse => {})
-			},
-			findNickname() {
-				var param = new URLSearchParams();
-				param.append('mail', this.loginInfoVo.mail);
-				param.append('pwd', this.loginInfoVo.pwd);
-				param.append('nickname', this.loginInfoVo.nickname);
-				this.$axios
-					.post('/api/user/findNickname', param)
-					.then(successResponse => {
-						this.responseResult = JSON.stringify(successResponse.data)
-						if (successResponse.data.code === 200) {
-							this.$router.replace({
-								path: '/index'
-							})
-						}
-					})
-					.catch(failResponse => {})
-			},
-			findAll() {
-				this.$axios
-					.get('/api/user/all')
-					.then(response => (this.info = response.data))
-					.catch(failResponse => {})
-			}
-		}
-	}
 </script>
+
+<style>
+	.bg {
+		height: 100vh;
+		background: #cbcbcb;
+		align-items: center;
+		justify-content: center;
+	}
+	#login{
+		width: 30vw;
+/* 		height: 50vh; */
+		border-radius: 10px;
+		background: #fff;
+		box-shadow: 24px 26px 19px rgba(0, 0, 0, 0.16);
+		padding-top: 3rem;
+		
+	}
+	
+	.inputField {
+		width: 70%;
+		margin-bottom: 1rem;
+	}
+</style>
