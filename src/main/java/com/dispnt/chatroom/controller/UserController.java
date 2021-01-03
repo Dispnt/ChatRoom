@@ -26,6 +26,22 @@ public class UserController {
     }
 
     @CrossOrigin
+    @PostMapping(path="/login")
+    public @ResponseBody
+    String loginUser (@RequestParam String mail, @RequestParam String pwd) {
+        User user = userDao.findByMail(mail);
+        if(user == null){
+            return "未找到用户";
+        }
+        else {
+            if (user.getPassword().equals(pwd)){
+                return "欢迎，"+ user.getNickname();
+            }
+        }
+        return "请检查密码";
+    }
+
+    @CrossOrigin
     @PostMapping(path="/delete")
     public @ResponseBody
     String delUser (@RequestParam String mail, @RequestParam String pwd) {

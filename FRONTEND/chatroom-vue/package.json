@@ -1,7 +1,7 @@
 {
-  "name": "chatroom-vue",
+  "name": "javalsj-vue",
   "version": "1.0.0",
-  "description": "Chatroom",
+  "description": "A Vue.js project",
   "author": "",
   "private": true,
   "scripts": {

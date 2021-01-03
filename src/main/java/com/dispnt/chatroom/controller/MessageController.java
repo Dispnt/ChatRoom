@@ -6,6 +6,7 @@ import com.dispnt.chatroom.dao.UserDao;
 import com.dispnt.chatroom.domain.Messages;
 import com.dispnt.chatroom.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class MessageController {
         m.setContent(msg_content);
         m.setTime(new Date());
         messageDao.save(m);
-        return "添加了。";
+        return "发送成功";
     }
 
     @CrossOrigin
@@ -43,7 +44,7 @@ public class MessageController {
 //            System.out.println(user);
 //        }
 //        return messages;
-        List<MessageUnionInfo> user =  messageDao.findMassageInfo(group_id);
+        List<MessageUnionInfo> user =  messageDao.findMassageInfo(group_id, Sort.by("time"));
         return user;
     }
 
