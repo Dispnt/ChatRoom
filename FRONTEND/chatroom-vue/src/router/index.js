@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import BlogIndex from '@/components/home/BlogIndex.vue'
 import UserRegister from '@/components/manage/UserRegister.vue'
+import ChatPage2 from '@/components/home/ChatPage2.vue'
 import ChatPage from '@/components/home/ChatPage.vue'
 
 Vue.use(Router)
@@ -25,6 +26,11 @@ export default new Router({
       path: '/chitchat',
       name: 'ChatPage',
       component: ChatPage
+    },   
+	{
+      path: '/chitchat2',
+      name: 'ChatPage2',
+      component: ChatPage2
     },
     {
       path: '/register',
