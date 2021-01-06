@@ -71,7 +71,7 @@ public class MessageController {
     @CrossOrigin
     @GetMapping(path="/all")
     public @ResponseBody
-    Iterable<Messages> getAllUsers() {
+    Iterable<Messages> getAllMessages() {
         return messageDao.findAll();
     }
 }
