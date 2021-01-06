@@ -18,79 +18,30 @@
 				</el-menu-item>
 			</el-menu>
 		</el-aside>
-		<!-- <el-aside width="300px" class="grouplist">
-			<el-row style="padding: 2rem; padding-bottom: 0;" class="title">群名称</el-row>
-			<el-row class="grouplist">
-				<el-card class="box-card" v-for="o in 40" :key="o">
-					<el-row>
-						<el-col>
-							<a style="float: left;font-size: 20px;">我是卡片{{o}}</a>
-							<el-button style="float: right; padding: 3px 0" type="text">15:22</el-button>
-						</el-col>
-						<el-col>
-							<div style="float: left;font-size: 14px;" class="text item">
-								内容{{o}}
-							</div>
-						</el-col>
-					</el-row>
-				</el-card>
-			</el-row>
-		</el-aside>
-		<el-main>
-			<el-row>
-				<el-card class="box-card" style="width: 90%;box-shadow: 0 2px 12px 0 rgba(0,0,0,0);">
-					<div v-for="msg in allMessage" :key="msg.content">
-						<el-row>
+		
+		<el-aside width="300px" class="grouplist">
+			<el-row style="padding: 2rem; padding-bottom: 0;" class="title">群聊天</el-row>
+			<el-row class="grouplist" >
+				<el-card class="box-card" v-for="group in allGroupInfo" :key="group.id" >
+					<div @click="groupBoxClick(group.id)">
+						<el-row >
 							<el-col>
-								<a style="float: left;font-size: 14px;">{{ msg.nickname }}</a>
-								<el-button style="float: right; padding: 3px 0" type="text">{{ msg.time | formatDate}}</el-button>
+								<a style="float: left;font-size: 20px;" >{{group.name}}</a>
+								<el-button style="float: right; padding: 3px 0" type="text">{{group.time| formatDate("Time")}}</el-button>
 							</el-col>
 							<el-col>
-								<div style="float: left;font-size: 20px;" class="text item">
-									{{ msg.content }}
+								<div style="float: left;font-size: 14px;" class="text item">
+									{{group.intro}}
 								</div>
 							</el-col>
 						</el-row>
-						<el-divider></el-divider>
 					</div>
-
-				</el-card>
-			</el-row>
-			<el-row>
-				<el-form ref="form" :model="form" label-width="80px">
-					<el-form-item label="我:">
-						<el-input type="textarea" v-model="messageInfo.msg_content"></el-input>
-					</el-form-item>
-					<el-form-item>
-						<el-button type="primary" @click="sendMsg">发送</el-button>
-						<el-button @click="console.log(this.allMessage)">清空</el-button>
-					</el-form-item>
-				</el-form>
-			</el-row>
-		</el-main>
-	</el-container>
-</template> -->
-		<el-aside width="300px" class="grouplist">
-			<el-row style="padding: 2rem; padding-bottom: 0;" class="title">群聊天</el-row>
-			<el-row class="grouplist">
-				<el-card class="box-card" v-for="o in 40" :key="o">
-					<el-row>
-						<el-col>
-							<a style="float: left;font-size: 20px;">我是卡片{{o}}</a>
-							<el-button style="float: right; padding: 3px 0" type="text">15:22</el-button>
-						</el-col>
-						<el-col>
-							<div style="float: left;font-size: 14px;" class="text item">
-								内容{{o}}
-							</div>
-						</el-col>
-					</el-row>
 				</el-card>
 			</el-row>
 		</el-aside>
 		<el-container>
 			<el-header class="grouptitle">
-				<el-row style="padding: 2rem; padding-bottom: 0;" class="">群名称</el-row>
+				<el-row style="padding: 2rem; padding-bottom: 0;" class="">{{groupTitle}}</el-row>
 			</el-header>
 			<el-main>
 				<el-col>
@@ -100,7 +51,7 @@
 								<el-row>
 									<el-col>
 										<a style="float: left;font-size: 14px;">{{ msg.nickname }}</a>
-										<el-button style="float: right; padding: 3px 0" type="text">{{ msg.time | formatDate}}</el-button>
+										<el-button style="float: right; padding: 3px 0" type="text">{{ msg.time | formatDate("Full")}}</el-button>
 									</el-col>
 									<el-col>
 										<div style="float: left;font-size: 20px;" class="text item">
@@ -124,7 +75,7 @@
 						</el-form-item>
 						<el-form-item style="display: flex; white-space: nowrap; justify-content: space-between; align-content: center; margin: 0 1rem">
 							<el-button type="primary" @click="sendMsg">发送</el-button>
-							<el-button @click="scrollToElement">最底</el-button>
+							<el-button @click="scrollToBottom">最底</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -138,9 +89,9 @@
 	export default {
 		data() {
 			return {
-				// allUserInfo:null
-				allUserInfo: this.$axios.get('/api/user/all')
-					.then(response => (this.allUserInfo = response.data)),
+				allGroupInfo: this.$axios.get('/api/group/all')
+					.then(response => (this.allGroupInfo = response.data)),
+				groupTitle: "选择群开始聊天",
 				messageInfo: {
 					group_id: 1,
 					user_id: 1,
@@ -150,7 +101,7 @@
 			}
 		},
 		filters: {
-			formatDate: function(value) {
+			formatDate(value,full) {
 				let date = new Date(value);
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
@@ -163,14 +114,20 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
-				return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;
+				if (full == "Full") {return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;}
+				else {return h + ':' + m + ':' + s}
+				
 			}
 		},
 		mounted() {
-			this.queryMsg()
-
+			// this.queryMsg(1)
+			
 		},
 		methods: {
+			groupBoxClick(group_id){
+				this.messageInfo.group_id = group_id
+				return setTimeout(this.queryMsg(group_id),200)
+			},
 			message_box(message_box_content = none) {
 				this.$message(message_box_content);
 			},
@@ -185,31 +142,28 @@
 						this.message_box(JSON.stringify(response.data))
 						this.queryMsg()
 					})
-					this.scrollToElement()
+					this.scrollToBottom()
 				
 			},
-			queryMsg() {
+			queryMsg(query_group_id ) {
+				console.log("refreshed")
+				this.groupTitle = this.allGroupInfo[query_group_id-1].name
 				var param = new URLSearchParams();
-				param.append('group_id', this.messageInfo.group_id);
+				param.append('group_id', query_group_id);
 				this.$axios.post('/api/chat/get', param)
 					.then(response => {
 						this.allMessage = response.data
 
 					})
-					this.scrollToElement()
-				
-				
+					this.scrollToBottom()
 			},
 			delMsg() {
 				this.messageInfo.msg_content = ""
 			},
-			scrollToElement() {
+			scrollToBottom() {
 				let el = this.$el.getElementsByClassName('msgCard')
-				console.log(el)
 				let ellen = el.length
 				el[ellen - 1].scrollIntoView();
-				
-
 			}
 		}
 	}
