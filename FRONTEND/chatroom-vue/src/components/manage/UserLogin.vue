@@ -53,31 +53,6 @@
 					password: '',
 					nickname: ''
 				},
-				rules: {
-					name: [{
-							required: true,
-							message: '请输入昵称',
-							trigger: 'blur'
-						},
-						{
-							min: 3,
-							max: 5,
-							message: '昵称长度在 3 到 5 个字符',
-							trigger: 'blur'
-						}
-					],
-					mail: [{
-							required: true,
-							message: '请输入邮箱地址',
-							trigger: 'blur'
-						},
-						{
-							type: 'email',
-							message: '请输入正确的邮箱地址',
-							trigger: ['blur', 'change']
-						}
-					]
-				},
 				registerFormVisible: false
 			}
 		},
@@ -92,6 +67,17 @@
 				param.append('pwd', this.loginInfo.password);
 				this.$axios
 					.post('/api/user/login', param)
+					.then(response => {
+						this.message_box(JSON.stringify(response.data))
+					})
+			},
+			register() {
+				var param = new URLSearchParams();
+				param.append('mail', this.registerInfo.mail);
+				param.append('pwd', this.registerInfo.pwd);
+				param.append('nickname', this.registerInfo.nickname);
+				this.$axios
+					.post('/api/user/register', param)
 					.then(response => {
 						this.message_box(JSON.stringify(response.data))
 					})
