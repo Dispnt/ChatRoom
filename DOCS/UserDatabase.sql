@@ -10,7 +10,7 @@ CREATE TABLE `user` (
 INSERT INTO `user`(`user_id` ,`user_mail`,`user_pwd`, `user_nickname`) VALUES (1, 'dispnt@dispnt.com', 'f18011433','Yu');
 
 
-CREATE TABLE `group`  (
+CREATE TABLE `qun`  (
   `group_id` int NOT NULL AUTO_INCREMENT,
   `group_admin_id` int(255) NOT NULL,
   `group_create_time` datetime NOT NULL,
