@@ -18,19 +18,16 @@
 							</el-form-item>
 							<el-form-item label="密码" prop="">
 								<el-input class="inputField" type="password" v-model="registerInfo.password" placeholder="123321?"></el-input>
-
 							</el-form-item>
 							<el-form-item label="昵称" prop="name">
 								<el-input class="inputField" v-model="registerInfo.nickname" placeholder="Yu"></el-input>
 							</el-form-item>
-
 						</el-form>
 						<div slot="footer" class="dialog-footer">
 							<el-button @click="registerFormVisible = false">取 消</el-button>
-							<el-button type="primary" @click="registerFormVisible = false">确 定</el-button>
+							<el-button type="primary" @click="register();registerFormVisible = false;">确 定</el-button>
 						</div>
 					</el-dialog>
-
 				</el-row>
 			</div>
 		</el-col>
@@ -68,13 +65,25 @@
 				this.$axios
 					.post('/api/user/login', param)
 					.then(response => {
-						this.message_box(JSON.stringify(response.data))
+						if (response.data.status=="MailErr"){
+							this.message_box("请检查邮箱")
+						}
+						else if (response.data.status=="PwdErr"){
+							this.message_box("请检查密码")
+						}
+						else {
+							console.log(response.data.name)
+							sessionStorage.setItem("user_name", response.data.name);
+							sessionStorage.setItem("user_id", response.data.id);
+							this.$router.push("/chitchat");
+						}
+						
 					})
 			},
 			register() {
 				var param = new URLSearchParams();
 				param.append('mail', this.registerInfo.mail);
-				param.append('pwd', this.registerInfo.pwd);
+				param.append('pwd', this.registerInfo.password);
 				param.append('nickname', this.registerInfo.nickname);
 				this.$axios
 					.post('/api/user/register', param)

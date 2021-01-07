@@ -1,5 +1,44 @@
 ALTER TABLE messages AUTO_INCREMENT = 1;
 ALTER TABLE user AUTO_INCREMENT = 1;
 ALTER TABLE usergroup AUTO_INCREMENT = 1;
-
 刷新自增
+
+AllMessage group_id:1 =
+[
+    {
+        "content": "1群成员1消息",
+        "time": "2020-12-30T03:21:49.000+00:00",
+        "nickname": "Yu",
+        "user": 1
+    },
+    {
+        "content": "1群成员2消息",
+        "time": "2020-12-30T03:28:21.000+00:00",
+        "nickname": "Dispnt",
+        "user": 2
+    },
+    {
+        "content": "你好",
+        "time": "2021-01-06T09:40:29.000+00:00",
+        "nickname": "Yu",
+        "user": 1
+    }
+]
+
+
+/group/all =
+
+[
+    {
+        "id": 1,
+        "time": "2020-12-30T02:59:33.000+00:00",
+        "intro": "学术讨论群",
+        "name": "数据库实验"
+    },
+    {
+        "id": 2,
+        "time": "2020-12-30T03:12:33.000+00:00",
+        "intro": "期末交流",
+        "name": "JavaWeb"
+    }
+]

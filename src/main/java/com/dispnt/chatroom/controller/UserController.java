@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping(path="/api/user") // This means URL's start with /demo (after Application path)
 public class UserController {
@@ -22,40 +25,46 @@ public class UserController {
         u.setPassword(pwd);
         u.setMail(mail);
         userDao.save(u);
-        return "注册了。";
+        return "注册成功！请登录";
     }
 
     @CrossOrigin
     @PostMapping(path="/login")
     public @ResponseBody
-    String loginUser (@RequestParam String mail, @RequestParam String pwd) {
+    Object loginUser (@RequestParam String mail, @RequestParam String pwd) {
         User user = userDao.findByMail(mail);
+        Map result = new HashMap();
         if(user == null){
-            return "未找到用户";
+            result.put("status", "MailErr");
+            return result;
         }
         else {
             if (user.getPassword().equals(pwd)){
-                return "欢迎，"+ user.getNickname();
+                result.put("status", "ok");
+                result.put("name", user.getNickname());
+                result.put("id", user.getId());
+                return result;
             }
         }
-        return "请检查密码";
+        result.put("status", "PwdErr");
+        return result;
     }
 
     @CrossOrigin
     @PostMapping(path="/delete")
     public @ResponseBody
-    String delUser (@RequestParam String mail, @RequestParam String pwd) {
+    String delUser (@RequestParam String mail) {
         User user = userDao.findByMail(mail);
         if(user == null){
             return "未找到邮箱用户";
         }
         else {
-            if (user.getPassword().equals(pwd)){
+//            if (user.getPassword().equals(pwd)){
                 userDao.delete(user);
                 return "删除了"+ user.getNickname();
-            }
+//            }
         }
-        return "删除失败，请检查密码";
+//        return "删除失败，请检查密码";
     }
 
 

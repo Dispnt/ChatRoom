@@ -1,33 +1,18 @@
 <template>
 	<el-container style="height:100vh">
-		<el-aside id="menu" width="200px">
-			<el-avatar id="avatar" :size="150" style="font-size: 36px;">fofu</el-avatar>
-			<el-menu style="margin-top: 100px;" default-active="2" class="el-menu-vertical-demo" background-color=transparent
-			 text-color="#2b2b2b" active-text-color="#0058CE" @open="handleOpen" @close="handleClose">
-				<el-menu-item index="1">
-					<span slot="title">群聊天</span>
-				</el-menu-item>
-				<el-menu-item index="2">
-					<span slot="title">成员管理</span>
-				</el-menu-item>
-				<el-menu-item index="3">
-					<span slot="title">录入新用户</span>
-				</el-menu-item>
-				<el-menu-item index="4">
-					<span slot="title">查询聊天记录</span>
-				</el-menu-item>
-			</el-menu>
-		</el-aside>
+		<chatHeader :userName=userName>
+			
+		</chatHeader>
 		
 		<el-aside width="300px" class="grouplist">
 			<el-row style="padding: 2rem; padding-bottom: 0;" class="title">群聊天</el-row>
 			<el-row class="grouplist" >
-				<el-card class="box-card" v-for="group in allGroupInfo" :key="group.id" >
+				<el-card class="box-card" v-for="group in UserGroupInfo" :key="group.id" >
 					<div @click="groupBoxClick(group.id)">
 						<el-row >
 							<el-col>
-								<a style="float: left;font-size: 20px;" >{{group.name}}</a>
-								<el-button style="float: right; padding: 3px 0" type="text">{{group.time| formatDate("Time")}}</el-button>
+								<a style="float: left;font-size: 18px;" >{{group.name}}</a>
+								<el-button style="float: right; padding: 3px 0" type="text">{{group.time| formatDate("Date")}}</el-button>
 							</el-col>
 							<el-col>
 								<div style="float: left;font-size: 14px;" class="text item">
@@ -75,7 +60,7 @@
 						</el-form-item>
 						<el-form-item style="display: flex; white-space: nowrap; justify-content: space-between; align-content: center; margin: 0 1rem">
 							<el-button type="primary" @click="sendMsg">发送</el-button>
-							<el-button @click="scrollToBottom">最底</el-button>
+							<el-button @click="queryMyGroup">最底</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -86,22 +71,29 @@
 </template>
 
 <script>
+	import chatHeader from "@/components/common/ChatHeader.vue";
+	
 	export default {
+		name: "ChatPage",
+		components: {
+			chatHeader
+		},
 		data() {
 			return {
-				allGroupInfo: this.$axios.get('/api/group/all')
-					.then(response => (this.allGroupInfo = response.data)),
+				UserGroupInfo: null,
 				groupTitle: "选择群开始聊天",
 				messageInfo: {
-					group_id: 1,
-					user_id: 1,
+					group_id: null,
+					user_id: sessionStorage.getItem("user_id"),
 					msg_content: ''
 				},
-				allMessage: []
+				allMessage: [],
+				refreshInterval:null,
+				userName:sessionStorage.getItem("user_name")
 			}
 		},
 		filters: {
-			formatDate(value,full) {
+			formatDate(value,requirement) {
 				let date = new Date(value);
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
@@ -114,19 +106,27 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
-				if (full == "Full") {return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;}
-				else {return h + ':' + m + ':' + s}
+				if (requirement == "Full") {return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;}
+				else if (requirement="Date"){return  MM + '月' + d + '日'}
 				
 			}
 		},
 		mounted() {
 			// this.queryMsg(1)
-			
+			this.queryMyGroup()
 		},
 		methods: {
+			queryMyGroup(){
+				var param = new URLSearchParams();
+				param.append('user_id', this.messageInfo.user_id);
+				this.$axios.post('/api/usergroup/get/group', param)
+					.then(response => (this.UserGroupInfo = response.data))
+			},
 			groupBoxClick(group_id){
+				clearInterval(this.refreshInterval);
 				this.messageInfo.group_id = group_id
-				return setTimeout(this.queryMsg(group_id),200)
+				this.refreshInterval = setInterval(()=>{this.queryMsg(group_id);},300)
+				
 			},
 			message_box(message_box_content = none) {
 				this.$message(message_box_content);
@@ -140,20 +140,24 @@
 					.post('/api/chat/add', param)
 					.then(response => {
 						this.message_box(JSON.stringify(response.data))
-						this.queryMsg()
+						this.delMsg()
 					})
 					this.scrollToBottom()
 				
 			},
 			queryMsg(query_group_id ) {
-				console.log("refreshed")
-				this.groupTitle = this.allGroupInfo[query_group_id-1].name
+				console.log(this.UserGroupInfo)
+				console.log("refreshed:"+query_group_id)
+				for(let item of this.UserGroupInfo) {
+					if(item.id === query_group_id) {
+						this.groupTitle = item.name
+				  }
+				}
 				var param = new URLSearchParams();
 				param.append('group_id', query_group_id);
 				this.$axios.post('/api/chat/get', param)
 					.then(response => {
 						this.allMessage = response.data
-
 					})
 					this.scrollToBottom()
 			},
@@ -169,98 +173,3 @@
 	}
 </script>
 
-<style>
-	#menu {
-		background: #fff;
-		border-right: 1px solid #348bff;
-	}
-
-	#avatar {
-		background: #348bff;
-		filter: drop-shadow(5px 5px 8px rgba(0, 0, 0, 0.12));
-		margin-top: 2rem;
-	}
-
-	.el-aside {
-		background-color: rgb(250, 250, 250);
-		color: #333;
-		text-align: center;
-		/* line-height: 200px; */
-	}
-
-	.el-main {
-		background-color: rgb(250, 250, 250);
-	}
-
-	.el-footer {
-		background-color: rgb(250, 250, 250);
-	}
-
-	.title {
-		font-weight: bold;
-		font-size: 24px;
-		text-align: left;
-		color: #000;
-	}
-
-	.grouplist {
-		overflow-x: hidden;
-		overflow-y: auto;
-
-		/* overflow: hidden; */
-	}
-
-	.grouplist::-webkit-scrollbar {
-		display: none;
-		/* Chrome Safari */
-	}
-
-	.text {
-		font-size: 12px;
-	}
-
-	.item {
-		margin-bottom: 10px;
-	}
-
-
-	.box-card {
-		width: 80%;
-		margin: 20px 4px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-
-	.el-form-item {
-		margin: 0 0 0 0;
-	}
-
-	.el-form-item__content {
-		margin: 0 0 0 0;
-	}
-
-	.inputbox {
-		background: #fff;
-		filter: drop-shadow(16px 14px 36px rgba(0, 0, 0, 0.06));
-		margin-top: -2rem;
-		padding-top: 1rem;
-		padding-bottom: 1rem;
-		bottom: 0;
-		width: 100%;
-	}
-
-	.grouptitle {
-		background: #fff;
-		border-bottom: 1px #348bff solid;
-		padding-top: 1rem;
-		padding-bottom: 8rem;
-		top: 0;
-		/* position: absolute; */
-		width: 100%;
-		font-weight: bolder;
-		font-size: 42px;
-		text-align: left;
-		color: #348bff;
-	}
-</style>

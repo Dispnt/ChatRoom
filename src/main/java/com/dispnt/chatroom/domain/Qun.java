@@ -10,8 +10,6 @@ public class Qun {
     @Column(name="group_id")
     private Integer id;
 
-    @Column(name="group_admin_id")
-    private Integer admin;
 
     @Column(name="group_create_time")
     private Date time;
@@ -22,22 +20,12 @@ public class Qun {
     @Column(name="group_name")
     private String name;
 
-
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Integer admin) {
-        this.admin = admin;
     }
 
     public String getIntro() {

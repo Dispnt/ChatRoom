@@ -11,10 +11,25 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 /* eslint-disable */
+
+router.beforeEach((to, from, next) => {
+	if (to.meta.requireAuth) {
+		if (sessionStorage.getItem("user_name") == null) {
+			next('/login');
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
+});
+
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>',
-  render: h => h(App)
+	el: '#app',
+	router,
+	components: {
+		App
+	},
+	template: '<App/>',
+	render: h => h(App)
 })

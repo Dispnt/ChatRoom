@@ -15,17 +15,15 @@ public class GroupController {
     private GroupDao groupDao;
     @CrossOrigin
     @PostMapping(path="/add")
-    public @ResponseBody String addMessage (@RequestParam Integer admin_id,
-                                            @RequestParam String intro,
+    public @ResponseBody String addMessage (@RequestParam String intro,
                                             @RequestParam String name)
     {
         Qun g = new Qun();
-        g.setAdmin(admin_id);
         g.setIntro(intro);
         g.setName(name);
         g.setTime(new Date());
         groupDao.save(g);
-        return "保存成功";
+        return "添加成功";
     }
 
 //    @CrossOrigin
