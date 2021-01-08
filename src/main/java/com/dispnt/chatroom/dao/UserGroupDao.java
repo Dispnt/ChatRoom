@@ -1,6 +1,8 @@
 package com.dispnt.chatroom.dao;
 
 import com.dispnt.chatroom.domain.Usergroup;
+import com.dispnt.chatroom.unioninfo.UserGroupUnionFindGroup;
+import com.dispnt.chatroom.unioninfo.UserGroupUnionFindUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

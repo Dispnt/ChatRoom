@@ -2,6 +2,8 @@ package com.dispnt.chatroom.controller;
 
 import com.dispnt.chatroom.dao.*;
 import com.dispnt.chatroom.domain.Usergroup;
+import com.dispnt.chatroom.unioninfo.UserGroupUnionFindGroup;
+import com.dispnt.chatroom.unioninfo.UserGroupUnionFindUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

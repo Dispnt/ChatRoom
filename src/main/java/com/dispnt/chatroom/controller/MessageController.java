@@ -1,10 +1,8 @@
 package com.dispnt.chatroom.controller;
 
 import com.dispnt.chatroom.dao.MessageDao;
-import com.dispnt.chatroom.dao.MessageUnionInfo;
-import com.dispnt.chatroom.dao.UserDao;
+import com.dispnt.chatroom.unioninfo.MessageUnionFindUser;
 import com.dispnt.chatroom.domain.Messages;
-import com.dispnt.chatroom.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -44,7 +42,7 @@ public class MessageController {
 //            System.out.println(user);
 //        }
 //        return messages;
-        List<MessageUnionInfo> user =  messageDao.findMassageInfo(group_id, Sort.by("time"));
+        List<MessageUnionFindUser> user =  messageDao.findMassageInfo(group_id, Sort.by("time"));
         return user;
     }
 

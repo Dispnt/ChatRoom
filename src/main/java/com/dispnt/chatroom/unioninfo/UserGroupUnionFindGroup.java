@@ -1,4 +1,4 @@
-package com.dispnt.chatroom.dao;
+package com.dispnt.chatroom.unioninfo;
 
 import java.util.Date;
 

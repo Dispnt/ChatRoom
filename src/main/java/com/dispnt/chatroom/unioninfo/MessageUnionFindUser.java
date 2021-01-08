@@ -1,8 +1,8 @@
-package com.dispnt.chatroom.dao;
+package com.dispnt.chatroom.unioninfo;
 
 import java.util.Date;
 
-public interface MessageUnionInfo {
+public interface MessageUnionFindUser {
     Integer getUser();
 
     String getContent();
