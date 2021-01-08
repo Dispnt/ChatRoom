@@ -60,7 +60,7 @@
 						</el-form-item>
 						<el-form-item style="display: flex; white-space: nowrap; justify-content: space-between; align-content: center; margin: 0 1rem">
 							<el-button type="primary" @click="sendMsg">发送</el-button>
-							<el-button @click="queryMyGroup">最底</el-button>
+							<el-button @click="scrollToBottom">最底</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
